@@ -1,0 +1,5 @@
+@EndUserText.label: 'Service Definition for Vendor Complaints'
+define service ZUI_VC_COMPLAINT {
+  expose ZC_VC_HEADER as ComplaintHeader;
+  expose ZC_VC_ITEM   as ComplaintItem;
+}

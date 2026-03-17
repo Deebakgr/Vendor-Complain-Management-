@@ -1,0 +1,82 @@
+unmanaged implementation in class zbp_i_vc_header unique;
+strict ( 2 );
+with draft;
+
+define behavior for ZI_VC_HEADER alias ComplaintHeader
+draft table zvc_header_d
+early numbering
+lock master
+total etag changed_at
+authorization master ( instance )
+{
+  create;
+  update;
+  delete;
+  association _Item { create; with draft; }
+
+  // Fields that the user shouldn't edit manually
+  field ( readonly ) complaint_id, created_at, created_by, changed_at, changed_by, resolved_date, resolution_note;
+
+  field ( readonly ) PrioritySortCode;
+  // Fields required to create a complaint
+  field ( mandatory ) vendor_id, description;
+
+  // The custom action we mapped to the "Submit Selected" button in the MDE
+  action submitComplaint result [1] $self;
+
+  // Standard Draft Actions
+  draft action Edit;
+  draft action Activate;
+  draft action Discard;
+  draft action Resume;
+  draft determine action Prepare;
+
+  // Mapping CDS view fields to Database Table fields (Client removed)
+  mapping for zvc_header
+  {
+    complaint_id = complaint_id;
+    vendor_id = vendor_id;
+    vendor_name = vendor_name;
+    complaint_date = complaint_date;
+    description = description;
+    status = status;
+    priority = priority;
+    assigned_to = assigned_to;
+    resolved_date = resolved_date;
+    resolution_note = resolution_note;
+    created_by = created_by;
+    created_at = created_at;
+    changed_by = changed_by;
+    changed_at = changed_at;
+  }
+}
+
+define behavior for ZI_VC_ITEM alias ComplaintItem
+implementation in class zbp_i_vc_item unique
+draft table zvcm_comp_item_d
+early numbering
+lock dependent by _Header
+authorization dependent by _Header
+{
+  update;
+  delete;
+  association _Header { with draft; }
+
+  field ( readonly ) complaint_id, item_id, created_at, created_by;
+  field ( mandatory ) material_id, quantity;
+
+  // Mapping CDS view fields to Database Table fields (Client removed)
+  mapping for zvcm_comp_item
+  {
+    complaint_id = complaint_id;
+    item_id = item_id;
+    material_id = material_id;
+    material_desc = material_desc;
+    quantity = quantity;
+    unit = unit;
+    defect_type = defect_type;
+    defect_desc = defect_desc;
+    created_by = created_by;
+    created_at = created_at;
+  }
+}

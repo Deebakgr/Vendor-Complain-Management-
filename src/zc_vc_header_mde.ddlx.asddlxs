@@ -1,0 +1,422 @@
+//@Metadata.layer: #CORE
+//
+//@UI: {
+//  headerInfo: {
+//    typeName:       'Complaint',
+//    typeNamePlural: 'Vendor Complaints',
+//    title:       { type: #STANDARD, value: 'complaint_id' },
+//    description: { type: #STANDARD, value: 'description' }
+//  }
+//}
+//
+//
+//@UI.presentationVariant: [{
+//  sortOrder:      [{ by: 'PrioritySortCode', direction: #ASC }],
+//  visualizations: [{ type: #AS_LINEITEM }]
+//}]
+//
+//annotate view ZC_VC_HEADER with
+//{
+//
+//  @UI.facet: [
+//    { id: 'StatusHeader',  purpose: #HEADER, type: #DATAPOINT_REFERENCE, position: 10, targetQualifier: 'StatusDP'   },
+//    { id: 'PriorityHeader',purpose: #HEADER, type: #DATAPOINT_REFERENCE, position: 20, targetQualifier: 'PriorityDP' },
+//    { id: 'DateHeader',    purpose: #HEADER, type: #DATAPOINT_REFERENCE, position: 30, targetQualifier: 'DateDP'     },
+//    { id: 'GeneralInfo',   purpose: #STANDARD, type: #FIELDGROUP_REFERENCE, label: 'General Information', position: 10, targetQualifier: 'GeneralFG' },
+//    { id: 'ClassificationInfo', purpose: #STANDARD, type: #FIELDGROUP_REFERENCE, label: 'Classification', position: 20, targetQualifier: 'ClassFG' },
+//    { id: 'DescriptionInfo', purpose: #STANDARD, type: #FIELDGROUP_REFERENCE, label: 'Description', position: 30, targetQualifier: 'DescFG' },
+//    { id: 'Items', purpose: #STANDARD, type: #LINEITEM_REFERENCE, label: 'Defect Items', position: 40, targetElement: '_Item' }
+//  ]
+//
+//  @UI.lineItem:   [{ position: 10, label: 'Complaint ID' }]
+//  @UI.fieldGroup: [{ qualifier: 'GeneralFG', position: 10, label: 'Complaint ID' }]
+//  complaint_id;
+//
+//  @UI.lineItem:   [{ position: 20, label: 'Vendor' }]
+//  @UI.fieldGroup: [{ qualifier: 'GeneralFG', position: 20, label: 'Vendor ID' }]
+//  vendor_id;
+//
+//  @UI.fieldGroup: [{ qualifier: 'GeneralFG', position: 30, label: 'Vendor Name' }]
+//  vendor_name;
+//
+//  @UI.lineItem:   [{ position: 30, label: 'Date' }]
+//  @UI.fieldGroup: [{ qualifier: 'GeneralFG', position: 40, label: 'Complaint Date' }]
+//  @UI.dataPoint:  { qualifier: 'DateDP', title: 'Complaint Date' }
+//  complaint_date;
+//
+//  @UI.lineItem:      [{ position: 40, label: 'Description' }]
+//  @UI.fieldGroup:    [{ qualifier: 'DescFG', position: 10 }]
+//  @UI.multiLineText: true
+//  description;
+//
+//  @UI.lineItem: [
+//    { position: 50, label: 'Status', criticality: 'StatusCriticality', criticalityRepresentation: #WITH_ICON },
+//    { type: #FOR_ACTION, dataAction: 'submitComplaint', label: 'Submit Selected', position: 10 }
+//  ]
+//  @UI.selectionField: [{ position: 10 }]
+//  @UI.fieldGroup:     [{ qualifier: 'ClassFG', position: 10, label: 'Status' }]
+//  @UI.dataPoint: { qualifier: 'StatusDP', title: 'Status', criticality: 'StatusCriticality' }
+//  status;
+//
+//  @UI.lineItem:       [{ position: 60, label: 'Priority', criticality: 'PriorityCriticality', criticalityRepresentation: #WITH_ICON }]
+//  @UI.selectionField: [{ position: 20 }]
+//  @UI.fieldGroup:     [{ qualifier: 'ClassFG', position: 20, label: 'Priority' }]
+//  @UI.dataPoint: { qualifier: 'PriorityDP', title: 'Priority', criticality: 'PriorityCriticality' }
+//  priority;
+//  
+//  /* ═══════════════════════════════════════════════════════════════
+//     NEW: RESOLUTION FIELDS
+//  ═══════════════════════════════════════════════════════════════ */
+//  @UI.lineItem:   [{ position: 70, label: 'Resolved Date' }]
+//  @UI.fieldGroup: [{ qualifier: 'ResoFG', position: 10, label: 'Resolved Date' }]
+//  resolved_date;
+//
+//  @UI.lineItem:   [{ position: 80, label: 'Resolution Note' }]
+//  @UI.fieldGroup: [{ qualifier: 'ResoFG', position: 20, label: 'Resolution Note' }]
+//  @UI.multiLineText: true
+//  resolution_note;
+//
+//  @UI.hidden: true
+//  StatusCriticality;
+//
+//  @UI.hidden: true
+//  PriorityCriticality;
+//
+//  @UI.hidden: true
+//  PrioritySortCode;
+//
+//}
+
+//@Metadata.layer: #CORE
+//
+//@UI: {
+//  headerInfo: {
+//    typeName:       'Complaint',
+//    typeNamePlural: 'Vendor Complaints',
+//    title:       { type: #STANDARD, value: 'complaint_id' },
+//    description: { type: #STANDARD, value: 'description' }
+//  }
+//}
+//
+//@UI.presentationVariant: [{
+//  sortOrder:      [{ by: 'PrioritySortCode', direction: #ASC }],
+//  visualizations: [{ type: #AS_LINEITEM }]
+//}]
+//
+//annotate view ZC_VC_HEADER with
+//{
+//
+//  /* ═══════════════════════════════════════════════════════════════
+//     UI FACETS
+//  ═══════════════════════════════════════════════════════════════ */
+//  @UI.facet: [
+//
+//    /* ── HEADER KPI BADGES ─────────────────────────────────────── */
+//    { id: 'StatusHeader',       purpose: #HEADER, type: #DATAPOINT_REFERENCE,
+//      position: 10, targetQualifier: 'StatusDP'       },
+//    { id: 'PriorityHeader',     purpose: #HEADER, type: #DATAPOINT_REFERENCE,
+//      position: 20, targetQualifier: 'PriorityDP'     },
+//    { id: 'DateHeader',         purpose: #HEADER, type: #DATAPOINT_REFERENCE,
+//      position: 30, targetQualifier: 'DateDP'         },
+//    // ★ NEW: Resolved Date KPI badge — only shows when date is filled
+//    { id: 'ResolvedDateHeader', purpose: #HEADER, type: #DATAPOINT_REFERENCE,
+//      position: 40, targetQualifier: 'ResolvedDateDP' },
+//
+//    /* ── OBJECT PAGE BODY ──────────────────────────────────────── */
+//    { id: 'GeneralInfo',        purpose: #STANDARD, type: #FIELDGROUP_REFERENCE,
+//      label: 'General Information', position: 10, targetQualifier: 'GeneralFG'   },
+//    { id: 'ClassificationInfo', purpose: #STANDARD, type: #FIELDGROUP_REFERENCE,
+//      label: 'Classification',      position: 20, targetQualifier: 'ClassFG'     },
+//    { id: 'DescriptionInfo',    purpose: #STANDARD, type: #FIELDGROUP_REFERENCE,
+//      label: 'Description',         position: 30, targetQualifier: 'DescFG'      },
+//    { id: 'ResolutionInfo',     purpose: #STANDARD, type: #FIELDGROUP_REFERENCE,
+//      label: 'Resolution Details',  position: 35, targetQualifier: 'ResolutionFG'},
+//    { id: 'Items',              purpose: #STANDARD, type: #LINEITEM_REFERENCE,
+//      label: 'Defect Items',        position: 40, targetElement:   '_Item'        }
+//  ]
+//
+//  /* ═══════════════════════════════════════════════════════════════
+//     COMPLAINT ID
+//  ═══════════════════════════════════════════════════════════════ */
+//  @UI.lineItem:   [{ position: 10, label: 'Complaint ID' }]
+//  @UI.fieldGroup: [{ qualifier: 'GeneralFG', position: 10, label: 'Complaint ID' }]
+//  complaint_id;
+//
+//  /* ═══════════════════════════════════════════════════════════════
+//     VENDOR ID + NAME
+//  ═══════════════════════════════════════════════════════════════ */
+//  @UI.lineItem:   [{ position: 20, label: 'Vendor' }]
+//  @UI.fieldGroup: [{ qualifier: 'GeneralFG', position: 20, label: 'Vendor ID' }]
+//  vendor_id;
+//
+//  @UI.fieldGroup: [{ qualifier: 'GeneralFG', position: 30, label: 'Vendor Name' }]
+//  vendor_name;
+//
+//  /* ═══════════════════════════════════════════════════════════════
+//     COMPLAINT DATE  +  Header KPI DataPoint
+//  ═══════════════════════════════════════════════════════════════ */
+//  @UI.lineItem:   [{ position: 30, label: 'Date' }]
+//  @UI.fieldGroup: [{ qualifier: 'GeneralFG', position: 40, label: 'Complaint Date' }]
+//  @UI.dataPoint:  { qualifier: 'DateDP', title: 'Complaint Date' }
+//  complaint_date;
+//
+//  /* ═══════════════════════════════════════════════════════════════
+//     DESCRIPTION
+//  ═══════════════════════════════════════════════════════════════ */
+//  @UI.lineItem:      [{ position: 40, label: 'Description' }]
+//  @UI.fieldGroup:    [{ qualifier: 'DescFG', position: 10 }]
+//  @UI.multiLineText: true
+//  description;
+//
+//  /* ═══════════════════════════════════════════════════════════════
+//     STATUS  +  Criticality  +  Action  +  Filter  +  KPI Badge
+//  ═══════════════════════════════════════════════════════════════ */
+//  @UI.lineItem: [
+//    { position: 50, label: 'Status',
+//      criticality: 'StatusCriticality',
+//      criticalityRepresentation: #WITH_ICON },
+//    { type: #FOR_ACTION, dataAction: 'submitComplaint',
+//      label: 'Submit Selected', position: 10 }
+//  ]
+//  @UI.selectionField: [{ position: 10 }]
+//  @UI.fieldGroup:     [{ qualifier: 'ClassFG', position: 10, label: 'Status' }]
+//  @UI.dataPoint: {
+//    qualifier:   'StatusDP',
+//    title:       'Status',
+//    criticality: 'StatusCriticality'
+//  }
+//  status;
+//
+//  /* ═══════════════════════════════════════════════════════════════
+//     PRIORITY  +  Criticality  +  Filter  +  KPI Badge
+//  ═══════════════════════════════════════════════════════════════ */
+//  @UI.lineItem: [{
+//    position: 60, label: 'Priority',
+//    criticality: 'PriorityCriticality',
+//    criticalityRepresentation: #WITH_ICON
+//  }]
+//  @UI.selectionField: [{ position: 20 }]
+//  @UI.fieldGroup:     [{ qualifier: 'ClassFG', position: 20, label: 'Priority' }]
+//  @UI.dataPoint: {
+//    qualifier:   'PriorityDP',
+//    title:       'Priority',
+//    criticality: 'PriorityCriticality'
+//  }
+//  priority;
+//
+//  /* ═══════════════════════════════════════════════════════════════
+//     ASSIGNED TO — Object Page only
+//  ═══════════════════════════════════════════════════════════════ */
+//  @UI.hidden: true
+//  @UI.fieldGroup: [{ qualifier: 'ClassFG', position: 30, label: 'Assigned To' }]
+//  assigned_to;
+//
+//  /* ═══════════════════════════════════════════════════════════════
+//     RESOLVED DATE
+//     ★ NEW: also shown as KPI badge in Object Page header
+//     @UI.hidden hides it from List Report columns
+//     @UI.dataPoint + facet shows it in KPI header strip
+//  ═══════════════════════════════════════════════════════════════ */
+//  @UI.hidden: true
+//  @UI.fieldGroup: [{ qualifier: 'ResolutionFG', position: 10, label: 'Resolved Date' }]
+//  @UI.dataPoint: {
+//    qualifier: 'ResolvedDateDP',   // ← links to 'ResolvedDateHeader' facet above
+//    title:     'Resolved Date'
+//  }
+//  resolved_date;
+//
+//  /* ═══════════════════════════════════════════════════════════════
+//     RESOLUTION NOTE — Object Page only
+//  ═══════════════════════════════════════════════════════════════ */
+//  @UI.hidden: true
+//  @UI.fieldGroup:    [{ qualifier: 'ResolutionFG', position: 20, label: 'Resolution Note' }]
+//  @UI.multiLineText: true
+//  resolution_note;
+//
+//  /* ═══════════════════════════════════════════════════════════════
+//     ADMIN FIELDS — hidden everywhere
+//  ═══════════════════════════════════════════════════════════════ */
+//  @UI.hidden: true
+//  created_by;
+//
+//  @UI.hidden: true
+//  created_at;
+//
+//  @UI.hidden: true
+//  changed_by;
+//
+//  @UI.hidden: true
+//  changed_at;
+//
+//  /* ═══════════════════════════════════════════════════════════════
+//     HIDDEN HELPER FIELDS
+//  ═══════════════════════════════════════════════════════════════ */
+//  @UI.hidden: true
+//  StatusCriticality;
+//
+//  @UI.hidden: true
+//  PriorityCriticality;
+//
+//  @UI.hidden: true
+//  PrioritySortCode;
+//
+//}
+@Metadata.layer: #CORE
+
+@UI: {
+  headerInfo: {
+    typeName:       'Complaint',
+    typeNamePlural: 'Vendor Complaints',
+    title:       { type: #STANDARD, value: 'complaint_id' },
+    description: { type: #STANDARD, value: 'description' }
+  }
+}
+
+@UI.presentationVariant: [{
+  sortOrder:      [{ by: 'PrioritySortCode', direction: #ASC }],
+  visualizations: [{ type: #AS_LINEITEM }]
+}]
+
+annotate view ZC_VC_HEADER with
+{
+
+  /* ═══════════════════════════════════════════════════════════════
+     UI FACETS
+  ═══════════════════════════════════════════════════════════════ */
+  @UI.facet: [
+
+    /* ── HEADER KPI BADGES ─────────────────────────────────────── */
+    { id: 'StatusHeader',       purpose: #HEADER, type: #DATAPOINT_REFERENCE,
+      position: 10, targetQualifier: 'StatusDP'       },
+    { id: 'PriorityHeader',     purpose: #HEADER, type: #DATAPOINT_REFERENCE,
+      position: 20, targetQualifier: 'PriorityDP'     },
+    { id: 'DateHeader',         purpose: #HEADER, type: #DATAPOINT_REFERENCE,
+      position: 30, targetQualifier: 'DateDP'         },
+    // ★ Resolved Date KPI badge
+    { id: 'ResolvedDateHeader', purpose: #HEADER, type: #DATAPOINT_REFERENCE,
+      position: 40, targetQualifier: 'ResolvedDateDP' },
+
+    /* ── OBJECT PAGE BODY ──────────────────────────────────────── */
+    { id: 'GeneralInfo',        purpose: #STANDARD, type: #FIELDGROUP_REFERENCE,
+      label: 'General Information', position: 10, targetQualifier: 'GeneralFG'   },
+    { id: 'ClassificationInfo', purpose: #STANDARD, type: #FIELDGROUP_REFERENCE,
+      label: 'Classification',      position: 20, targetQualifier: 'ClassFG'     },
+    { id: 'DescriptionInfo',    purpose: #STANDARD, type: #FIELDGROUP_REFERENCE,
+      label: 'Description',         position: 30, targetQualifier: 'DescFG'      },
+    { id: 'ResolutionInfo',     purpose: #STANDARD, type: #FIELDGROUP_REFERENCE,
+      label: 'Resolution Details',  position: 35, targetQualifier: 'ResolutionFG'},
+    { id: 'Items',              purpose: #STANDARD, type: #LINEITEM_REFERENCE,
+      label: 'Defect Items',        position: 40, targetElement:   '_Item'        }
+  ]
+
+  /* ═══════════════════════════════════════════════════════════════
+     COMPLAINT ID
+  ═══════════════════════════════════════════════════════════════ */
+  @UI.lineItem:   [{ position: 10, label: 'Complaint ID' }]
+  @UI.fieldGroup: [{ qualifier: 'GeneralFG', position: 10, label: 'Complaint ID' }]
+  complaint_id;
+
+  /* ═══════════════════════════════════════════════════════════════
+     VENDOR ID + NAME
+  ═══════════════════════════════════════════════════════════════ */
+  @UI.lineItem:   [{ position: 20, label: 'Vendor' }]
+  @UI.fieldGroup: [{ qualifier: 'GeneralFG', position: 20, label: 'Vendor ID' }]
+  vendor_id;
+
+  @UI.fieldGroup: [{ qualifier: 'GeneralFG', position: 30, label: 'Vendor Name' }]
+  vendor_name;
+
+  /* ═══════════════════════════════════════════════════════════════
+     COMPLAINT DATE
+  ═══════════════════════════════════════════════════════════════ */
+  @UI.lineItem:   [{ position: 30, label: 'Date' }]
+  @UI.fieldGroup: [{ qualifier: 'GeneralFG', position: 40, label: 'Complaint Date' }]
+  @UI.dataPoint:  { qualifier: 'DateDP', title: 'Complaint Date' }
+  complaint_date;
+
+  /* ═══════════════════════════════════════════════════════════════
+     DESCRIPTION
+  ═══════════════════════════════════════════════════════════════ */
+  @UI.lineItem:      [{ position: 40, label: 'Description' }]
+  @UI.fieldGroup:    [{ qualifier: 'DescFG', position: 10 }]
+  @UI.multiLineText: true
+  description;
+
+  /* ═══════════════════════════════════════════════════════════════
+     STATUS
+  ═══════════════════════════════════════════════════════════════ */
+  @UI.lineItem: [
+    { position: 50, label: 'Status',
+      criticality: 'StatusCriticality',
+      criticalityRepresentation: #WITH_ICON },
+    { type: #FOR_ACTION, dataAction: 'submitComplaint',
+      label: 'Submit Selected', position: 10 }
+  ]
+  @UI.selectionField: [{ position: 10 }]
+  @UI.fieldGroup:     [{ qualifier: 'ClassFG', position: 10, label: 'Status' }]
+  @UI.dataPoint: {
+    qualifier:   'StatusDP',
+    title:       'Status',
+    criticality: 'StatusCriticality'
+  }
+  status;
+
+  /* ═══════════════════════════════════════════════════════════════
+     PRIORITY
+  ═══════════════════════════════════════════════════════════════ */
+  @UI.lineItem: [{
+    position: 60, label: 'Priority',
+    criticality: 'PriorityCriticality',
+    criticalityRepresentation: #WITH_ICON
+  }]
+  @UI.selectionField: [{ position: 20 }]
+  @UI.fieldGroup:     [{ qualifier: 'ClassFG', position: 20, label: 'Priority' }]
+  @UI.dataPoint: {
+    qualifier:   'PriorityDP',
+    title:       'Priority',
+    criticality: 'PriorityCriticality'
+  }
+  priority;
+
+//  /* ═══════════════════════════════════════════════════════════════
+//     ASSIGNED TO (Removed UI.Hidden so it appears on Object Page)
+//  ═══════════════════════════════════════════════════════════════ */
+//  @UI.fieldGroup: [{ qualifier: 'ClassFG', position: 30, label: 'Assigned To' }]
+//  assigned_to;
+
+  /* ═══════════════════════════════════════════════════════════════
+     RESOLVED DATE (Removed UI.Hidden!)
+  ═══════════════════════════════════════════════════════════════ */
+  @UI.fieldGroup: [{ qualifier: 'ResolutionFG', position: 10, label: 'Resolved Date' }]
+  @UI.dataPoint: {
+    qualifier: 'ResolvedDateDP', 
+    title:     'Resolved Date'
+  }
+  resolved_date;
+
+  /* ═══════════════════════════════════════════════════════════════
+     RESOLUTION NOTE (Removed UI.Hidden!)
+  ═══════════════════════════════════════════════════════════════ */
+  @UI.fieldGroup:    [{ qualifier: 'ResolutionFG', position: 20, label: 'Resolution Note' }]
+  @UI.multiLineText: true
+  resolution_note;
+
+  /* ═══════════════════════════════════════════════════════════════
+     ADMIN & HELPER FIELDS — Keep these hidden
+  ═══════════════════════════════════════════════════════════════ */
+  @UI.hidden: true
+  created_by;
+  @UI.hidden: true
+  created_at;
+  @UI.hidden: true
+  changed_by;
+  @UI.hidden: true
+  changed_at;
+  @UI.hidden: true
+  StatusCriticality;
+  @UI.hidden: true
+  PriorityCriticality;
+  @UI.hidden: true
+  PrioritySortCode;
+
+}

@@ -1,0 +1,45 @@
+@Metadata.layer: #CORE
+@UI: {
+  headerInfo: { 
+    typeName: 'Defect Item', 
+    typeNamePlural: 'Defect Items',
+    title: { type: #STANDARD, value: 'item_id' }
+  }
+}
+annotate view ZC_VC_ITEM with
+{
+  @UI.facet: [
+    { id: 'ItemDetails', purpose: #STANDARD, type: #IDENTIFICATION_REFERENCE, label: 'Item Details', position: 10 }
+  ]
+
+  /* We hide complaint_id because it is already known from the Header */
+  @UI.hidden: true
+  complaint_id;
+
+  @UI.lineItem: [{ position: 10, label: 'Item No.' }]
+  @UI.identification: [{ position: 10, label: 'Item No.' }]
+  item_id;
+
+  @UI.lineItem: [{ position: 20, label: 'Material' }]
+  @UI.identification: [{ position: 20, label: 'Material' }]
+  material_id;
+
+  @UI.lineItem: [{ position: 30, label: 'Material Description' }]
+  @UI.identification: [{ position: 30, label: 'Material Description' }]
+  material_desc;
+
+  @UI.lineItem: [{ position: 40, label: 'Quantity' }]
+  @UI.identification: [{ position: 40, label: 'Quantity' }]
+  quantity;
+
+  @UI.hidden: true
+  unit;
+
+  @UI.lineItem: [{ position: 50, label: 'Defect Type' }]
+  @UI.identification: [{ position: 50, label: 'Defect Type' }]
+  defect_type;
+
+  @UI.lineItem: [{ position: 60, label: 'Defect Description' }]
+  @UI.identification: [{ position: 60, label: 'Defect Description' }]
+  defect_desc;
+}
